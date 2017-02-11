@@ -18,9 +18,9 @@ void execCmd(char* cmd) {
 	printf("%s\n", cmd);
 }
 
-// Wait for the user to enter a one-line command, executing what was entered if
+// Wait for the user to enter a one-line command, returning what was entered if
 // possible (or erroring out if not possible)
-void getEnteredCmd() {
+char* getEnteredCmd() {
 	char *cmd = (char*)malloc(MAX_LINE_LENGTH * sizeof(char));
 	size_t bufferSize;
 	size_t cmdLength = getline(&cmd, &bufferSize, stdin);
@@ -28,8 +28,7 @@ void getEnteredCmd() {
 		// Remove trailing newline from entered command (for conveniece)
 		cmd[cmdLength - 1] = '\0';
 		cmdLength--;
-		// Execute whatever command was entered (if possible)
-		execCmd(cmd);
+		return cmd;
 	} else {
 		// Exit if an error occurred while reading the line
 		printf("could not read line; exiting...");
@@ -47,7 +46,9 @@ int main() {
 	while (1) {
 		printf("osh> ");
 		fflush(stdout);
-		getEnteredCmd();
+		// Retrieve and execute whatever command was entered (if possible)
+		char* cmd = getEnteredCmd();
+		execCmd(cmd);
 	}
 
 	return 0;

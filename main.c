@@ -32,6 +32,7 @@ char* getEnteredCmd() {
 	} else {
 		// Exit if an error occurred while reading the line
 		printf("could not read line; exiting...");
+		free(cmd);
 		exit(0);
 	}
 }
@@ -49,6 +50,7 @@ int main() {
 		// Retrieve and execute whatever command was entered (if possible)
 		char* cmd = getEnteredCmd();
 		execCmd(cmd);
+		free(cmd);
 	}
 
 	return 0;

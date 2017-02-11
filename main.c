@@ -1,19 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 // The maximum length allowed for any line in the shell
 static const int MAX_LINE_LENGTH = 80;
 
 // Execute the given command (or display error if not a real command)
 void execCmd(char* cmd) {
-	if (strcmp(cmd, "") == 0) {
-		// Do nothing if the entered command is empty
-		return;
-	} else if (strcmp(cmd, "exit") == 0) {
-		// Exit the shell if `exit` command was given
-		exit(0);
-	}
 	// Merely print the command if non-empty
 	printf("%s\n", cmd);
 }
@@ -49,7 +43,23 @@ int main() {
 		fflush(stdout);
 		// Retrieve and execute whatever command was entered (if possible)
 		char* cmd = getEnteredCmd();
-		execCmd(cmd);
+		// Exit the shell if `exit` command was given
+		if (strcmp(cmd, "exit") == 0) {
+			return 0;
+		}
+		// If user entered nothing, continue to next line
+		if (strcmp(cmd, "") == 0) {
+			continue;
+		}
+		int pid = fork();
+		if (pid == 0) {
+			// Execute command within process, then exit child
+			execCmd(cmd);
+			return 0;
+		} else {
+			// Make parent process wait for child process to finish
+			wait(NULL);
+		}
 		free(cmd);
 	}
 

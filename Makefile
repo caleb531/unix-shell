@@ -4,10 +4,6 @@ CC = gcc
 SRC = *.c
 PROG = unix-shell.out
 
-# Execute program (the default task when calling `make`)
-run: build
-	./$(PROG)
-
 # Clean project and compile program
 build: clean $(PROG)
 

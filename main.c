@@ -33,7 +33,7 @@ char* getEnteredCmd() {
 		// Exit if an error occurred while reading the line
 		printf("could not read line; exiting...");
 		free(cmd);
-		exit(0);
+		exit(1);
 	}
 }
 

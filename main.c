@@ -28,7 +28,12 @@ void parseCmd(char* cmd, char** cmdArgs) {
 void execCmd(char* cmd) {
 	char* cmdArgs[(MAX_LINE_LENGTH / 2) + 1];
 	parseCmd(cmd, cmdArgs);
-	execvp(cmdArgs[0], cmdArgs);
+	int status = execvp(cmdArgs[0], cmdArgs);
+	// execvp() returns -1 if command does not exist
+	if (status == -1) {
+		printf("invalid command; try again\n");
+		exit(1);
+	}
 	// TODO: add code for deallocating elements of cmdArgs
 }
 

@@ -8,40 +8,28 @@ static const int MAX_LINE_LENGTH = 80;
 
 // Parse the given command into the given pointers for command name and command
 // arguments
-void parseCmd(char* cmd, char** cmdName, char** cmdArgs) {
+void parseCmd(char* cmd, char** cmdArgs) {
 	// Split the command using a single space as a delimeter
 	char* cmdArg = (char*)malloc(MAX_LINE_LENGTH * sizeof(char));
 	cmdArg = strtok(cmd, " ");
-	// Assume the command name is the first term in the command
-	strcpy(*cmdName, cmdArg);
-	*cmdName = (char*)cmdArg;
 	int i = 0;
 	// Assume the arguments comprise every term after the first term
-	while (1) {
-		if (cmdArg == NULL) {
-			break;
-		}
+	while (cmdArg != NULL) {
 		cmdArgs[i] = (char*)malloc((strlen(cmdArg) + 1) * sizeof(char));
 		strcpy(cmdArgs[i], cmdArg);
+		cmdArg = strtok(NULL, " ");
 		i += 1;
 	}
+	// Add terminating null pointer to signify end of array
+	cmdArgs[i] = NULL;
 }
 
 // Execute the given command (or display error if not a real command)
 void execCmd(char* cmd) {
-	char* cmdName = (char*)malloc(((MAX_LINE_LENGTH / 2) + 1) * sizeof(char));
 	char* cmdArgs[(MAX_LINE_LENGTH / 2) + 1];
-	parseCmd(cmd, &cmdName, cmdArgs);
-	// Log parsed command name and arguments (for testing); since array lengths
-	// can't be automatically computed in C, just assume every typed command has
-	// three arguments
-	printf("Name: %s\n", cmdName);
-	printf("Args:\n");
-	int i;
-	for (i = 0; i < 3; i++) {
-		printf("%s\n", cmdArgs[i]);
-	}
-	// execvp(cmdName, cmdArgs);
+	parseCmd(cmd, cmdArgs);
+	execvp(cmdArgs[0], cmdArgs);
+	// TODO: add code for deallocating elements of cmdArgs
 }
 
 // Wait for the user to enter a one-line command, returning what was entered if

@@ -19,7 +19,7 @@ void parseCmd(string cmd, vector<char*> &cmdArgs) {
 
 	// stringstream splits the commands using whitespace as delimiter
 	while (ss >> argStr) {
-		char* cmdArg = new char[argStr.length()];
+		char* cmdArg = new char[argStr.length() + 1];
 		strcpy(cmdArg, argStr.c_str());
 		cmdArgs.push_back(cmdArg);
 	}

@@ -33,7 +33,7 @@ void execCmd(string cmd) {
 	// execvp() returns -1 if command does not exist
 	if (status == -1) {
 		cout << "invalid command; try again" << endl;
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	// TODO: add code for deallocating elements of cmdArgs
 }
@@ -55,6 +55,7 @@ int main() {
 	// Run forever until shell exit
 	while (1) {
 		cout << "osh>";
+		cout << flush;
 		// Retrieve and execute whatever command was entered (if possible)
 		string cmd = getEnteredCmd();
 		// Exit the shell if `exit` command was given
@@ -65,14 +66,19 @@ int main() {
 		if (cmd == "") {
 			continue;
 		}
+
 		int pid = fork();
 		if (pid == 0) {
-			// Execute command within process, then exit child
+			// Execute command within process, then exits child
 			execCmd(cmd);
-			return 0;
 		} else {
 			// Make parent process wait for child process to finish
-			wait(NULL);
+			int status;
+			wait(&status);
+			//Check if child exited properly
+			if (status == EXIT_SUCCESS) { 
+				//TODO: Add command to history here
+			}
 		}
 	}
 	return 0;

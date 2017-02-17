@@ -1,7 +1,7 @@
 #!/usr/bin/make
 
-CC = gcc
-SRC = *.c
+CC = g++
+SRC = *.cpp
 PROG = unix-shell.out
 
 # Clean project and compile program

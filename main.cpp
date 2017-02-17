@@ -40,7 +40,7 @@ void execCmd(string cmd) {
 
 	// execvp() returns -1 if command does not exist
 	if (status == -1) {
-		cout << "Invalid command; try again" << endl;
+		cout << cmdArgsArray[0] << ": command not found" << endl;
 		exit(1);
 	}
 	// TODO: add code for deallocating elements of cmdArgs

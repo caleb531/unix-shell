@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <vector>
 #include <sstream>
 #include <unistd.h>
@@ -10,17 +11,22 @@ using namespace std;
 // Parse the given command into the vector for command name and arguments
 // Command is saved in the first vector index, and all arguments are after that
 void parseCmd(string cmd, vector<char*> &cmdArgs) {
-	istringstream stream(cmd);
-	string temp;
+	// A stream to store the command for reading while parsing
+	istringstream ss(cmd);
+	// A temporary variable for storing the string (non-char*) instance of
+	// command argument
+	string argStr;
 
-	//stringstream splits the commands using whitespace as delimeter
-	while (stream >> temp) {
-		char* cStr = &temp[0];
-		cmdArgs.push_back(cStr);
+	// stringstream splits the commands using whitespace as delimiter
+	while (ss >> argStr) {
+		char* cmdArg = new char[argStr.length()];
+		strcpy(cmdArg, argStr.c_str());
+		cmdArgs.push_back(cmdArg);
 	}
 
-	//Push back null to signify end of arguments
+	// Push back null to signify end of arguments
 	cmdArgs.push_back(NULL);
+
 }
 
 // Execute the given command (or display error if not a real command)
@@ -28,7 +34,9 @@ void execCmd(string cmd) {
 	vector<char*> cmdArgs;
 	parseCmd(cmd, cmdArgs);
 
-	int status = execvp(cmdArgs[0], &cmdArgs[0]);
+	// Convert vector to char** to appease execvp()
+	char **cmdArgsArray = &cmdArgs[0];
+	int status = execvp(cmdArgsArray[0], cmdArgsArray);
 
 	// execvp() returns -1 if command does not exist
 	if (status == -1) {
@@ -54,8 +62,7 @@ string getEnteredCmd() {
 int main() {
 	// Run forever until shell exit
 	while (1) {
-		cout << "osh>";
-		cout << flush;
+		cout << "osh> ";
 		// Retrieve and execute whatever command was entered (if possible)
 		string cmd = getEnteredCmd();
 		// Exit the shell if `exit` command was given
@@ -76,7 +83,7 @@ int main() {
 			int status;
 			wait(&status);
 			// Check if child exited properly
-			if (status == 0) { 
+			if (status == 0) {
 				// TODO: Add command to history here
 			}
 		}

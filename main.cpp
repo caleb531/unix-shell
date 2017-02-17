@@ -33,7 +33,7 @@ void execCmd(string cmd) {
 	// execvp() returns -1 if command does not exist
 	if (status == -1) {
 		cout << "invalid command; try again" << endl;
-		exit(EXIT_FAILURE);
+		exit(1);
 	}
 	// TODO: add code for deallocating elements of cmdArgs
 }
@@ -75,9 +75,9 @@ int main() {
 			// Make parent process wait for child process to finish
 			int status;
 			wait(&status);
-			//Check if child exited properly
-			if (status == EXIT_SUCCESS) { 
-				//TODO: Add command to history here
+			// Check if child exited properly
+			if (status == 0) { 
+				// TODO: Add command to history here
 			}
 		}
 	}

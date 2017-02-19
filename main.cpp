@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <cstdlib>
+#include <deque>
 
 using namespace std;
 
@@ -59,7 +60,70 @@ string getEnteredCmd() {
 	}
 }
 
+// Displays the last 10 values of the deque
+void displayHistory(deque<string> &history) {
+	if (!history.size() > 0) {
+		cout << "No commands in history" << endl;
+		return;
+	}
+
+	for (int i = 0; i < 10; i++) {
+		if (i >= history.size()) {
+			break;
+		}
+
+		cout << history.size() - i << " " <<  history[history.size() - i - 1] << endl;
+	}
+}
+
+// Changes the passed in cmd string to the proper command in history
+// Returns true if the string was changed, false otherwise
+bool changeCommand(string &cmd, deque<string> &history) {
+	//If trying to access a position outside of the current bounds of the history, return false
+	if (!history.size() > 0) {
+		cout << "No commands in history" << endl;
+		return false;
+	}
+
+	// Sets cmd to the last value in history
+	if (cmd == "!!") { 
+		cmd = history[history.size() - 1];
+		return true;
+	}
+
+	// Sets cmd to the Nth value in history
+	if (cmd[0] == '!') {
+
+		// Represents the Nth command in history to be executed 
+		long pos;
+
+		pos = strtol(cmd.substr(1, 2).c_str(), NULL, 10);
+
+		// If strtol couldn't parse the string, return false
+		if (pos == 0) {
+			cout << "Could not read history position" << endl;
+			return false;
+		}
+
+		// If the parsed number points the a number greater than the current index, return false
+		if (pos > history.size()) {
+			cout << "No such command in history" << endl;
+			return false;
+		}
+
+		// Change cmd to the proper string in history
+		cmd = history[pos - 1];
+		return true;
+	}
+
+	// If the cmd wasn't the proper syntax, then don't change it
+	return false;
+}
+
 int main() {
+	//Deque containing last 10 commands in history
+	deque<string> history;
+
 	// Run forever until shell exit
 	while (1) {
 		cout << "osh> ";
@@ -73,6 +137,19 @@ int main() {
 		if (cmd == "") {
 			continue;
 		}
+		// Display the current history, then continue to next line
+		if (cmd == "history") {
+			displayHistory(history);
+			continue;
+		}
+
+		if (cmd == "!!" || cmd[0] == '!') {
+			// Attempt to change cmd to the proper cmd in history
+			// If unable, continue to next line
+			if (!changeCommand(cmd, history)) {
+				continue;
+			}
+		}
 
 		int pid = fork();
 		if (pid == 0) {
@@ -84,7 +161,7 @@ int main() {
 			wait(&status);
 			// Check if child exited properly
 			if (status == 0) {
-				// TODO: Add command to history here
+				history.push_back(cmd);
 			}
 		}
 	}

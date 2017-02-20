@@ -149,7 +149,7 @@ int main() {
 	deque<string> history;
 
 	// Run forever until shell exit
-	while (1) {
+	while (true) {
 		cout << "osh> ";
 		// Retrieve and execute whatever command was entered (if possible)
 		string cmd = getEnteredCmd();

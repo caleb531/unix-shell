@@ -78,14 +78,14 @@ string getEnteredCmd() {
 	}
 }
 
-// Displays the last 10 values of the deque
+// Display a list of the last 10 commands in the history
 void displayHistory(deque<string> &history) {
 	if (!history.size() > 0) {
 		cout << "No commands in history" << endl;
 		return;
 	}
 
-	// Save at most the last 10 commands in the history
+	// Display no more than the 10 most-recent commands
 	for (int i = 0; i < 10; i++) {
 		// There may be fewer than 10 items in the history; do not display more
 		// than what the history contains

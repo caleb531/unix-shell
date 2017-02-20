@@ -142,6 +142,18 @@ bool changeCommand(string &cmd, deque<string> &history) {
 	return false;
 }
 
+
+// Wait for the current child process (with the given pid) to finish
+void waitForChildProcess(int childPid) {
+	// Running wait() within a loop ensures that background processes executed
+	// in the past do not affect the synchronous execution of future foreground
+	// processes
+	int terminatedPid;
+	do {
+		terminatedPid = wait(NULL);
+	} while (terminatedPid > 0 && terminatedPid != childPid);
+}
+
 int main() {
 	// Deque containing last 10 commands in history; a deque guarantees O(1)
 	// insertions/deletions from either end of the sequence, making it an
@@ -180,12 +192,10 @@ int main() {
 			// Execute command within process, then exits child
 			execCmd(cmd);
 		} else {
-			// Make parent process wait for child process to finish
-			int status;
-			// Only wait for the child process to finish if the command should
-			// not spawn a background process
+			// If child process should be run as a foreground process (i.e. not
+			// via &), make parent process wait for child to finish
 			if (!cmdIsBgProcess(cmd)) {
-				wait(&status);
+				waitForChildProcess(pid);
 			}
 			history.push_back(cmd);
 		}

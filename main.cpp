@@ -67,26 +67,30 @@ void displayHistory(deque<string> &history) {
 		return;
 	}
 
+	// Save at most the last 10 commands in the history
 	for (int i = 0; i < 10; i++) {
+		// There may be fewer than 10 items in the history; do not display more
+		// than what the history contains
 		if (i >= history.size()) {
 			break;
 		}
 
-		cout << history.size() - i << " " <<  history[history.size() - i - 1] << endl;
+		cout << (history.size() - i) << " " <<  history[history.size() - i - 1] << endl;
 	}
 }
 
 // Changes the passed in cmd string to the proper command in history
 // Returns true if the string was changed, false otherwise
 bool changeCommand(string &cmd, deque<string> &history) {
-	//If trying to access a position outside of the current bounds of the history, return false
+	// If trying to access a position outside of the current bounds of the
+	// history, return false
 	if (!history.size() > 0) {
 		cout << "No commands in history" << endl;
 		return false;
 	}
 
 	// Sets cmd to the last value in history
-	if (cmd == "!!") { 
+	if (cmd == "!!") {
 		cmd = history[history.size() - 1];
 		return true;
 	}
@@ -94,7 +98,7 @@ bool changeCommand(string &cmd, deque<string> &history) {
 	// Sets cmd to the Nth value in history
 	if (cmd[0] == '!') {
 
-		// Represents the Nth command in history to be executed 
+		// Represents the Nth command in history to be executed
 		long pos;
 
 		pos = strtol(cmd.substr(1, 2).c_str(), NULL, 10);
@@ -121,7 +125,9 @@ bool changeCommand(string &cmd, deque<string> &history) {
 }
 
 int main() {
-	//Deque containing last 10 commands in history
+	// Deque containing last 10 commands in history; a deque guarantees O(1)
+	// insertions/deletions from either end of the sequence, making it an
+	// optimal choice for storing command history
 	deque<string> history;
 
 	// Run forever until shell exit

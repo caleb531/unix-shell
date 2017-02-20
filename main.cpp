@@ -52,7 +52,6 @@ void execCmd(string cmd) {
 		cout << cmdArgsArray[0] << ": command not found" << endl;
 		exit(1);
 	}
-	// TODO: add code for deallocating elements of cmdArgs
 }
 
 // Wait for the user to enter a one-line command, returning what was entered if

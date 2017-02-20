@@ -9,6 +9,11 @@
 
 using namespace std;
 
+// Check if the command should spawn a background process (via a trailing &)
+bool cmdIsBgProcess(string cmd) {
+	return (cmd[cmd.length() - 1] == '&');
+}
+
 // Parse the given command into the vector for command name and arguments
 // Command is saved in the first vector index, and all arguments are after that
 void parseCmd(string cmd, vector<char*> &cmdArgs) {
@@ -23,6 +28,12 @@ void parseCmd(string cmd, vector<char*> &cmdArgs) {
 		char* cmdArg = new char[argStr.length() + 1];
 		strcpy(cmdArg, argStr.c_str());
 		cmdArgs.push_back(cmdArg);
+	}
+
+	// If command is to run as background process via &
+	if (cmdIsBgProcess(cmd)) {
+		// Do not treat & as an argument to the actual command
+		cmdArgs.pop_back();
 	}
 
 	// Push back null to signify end of arguments
@@ -171,7 +182,11 @@ int main() {
 		} else {
 			// Make parent process wait for child process to finish
 			int status;
-			wait(&status);
+			// Only wait for the child process to finish if the command should
+			// not spawn a background process
+			if (!cmdIsBgProcess(cmd)) {
+				wait(&status);
+			}
 			// Check if child exited properly
 			if (status == 0) {
 				history.push_back(cmd);

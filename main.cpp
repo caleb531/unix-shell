@@ -30,6 +30,13 @@ void parseCmd(string cmd, vector<char*> &cmdArgs) {
 
 }
 
+// Deallocate memory used for storing each command argument in the given array
+void freeCmdArgs(vector<char*> &cmdArgs) {
+	for (int i = 0; i < cmdArgs.size(); i++) {
+		delete cmdArgs[i];
+	}
+}
+
 // Execute the given command (or display error if not a real command)
 void execCmd(string cmd) {
 	vector<char*> cmdArgs;
@@ -38,6 +45,7 @@ void execCmd(string cmd) {
 	// Convert vector to char** to appease execvp()
 	char **cmdArgsArray = &cmdArgs[0];
 	int status = execvp(cmdArgsArray[0], cmdArgsArray);
+	freeCmdArgs(cmdArgs);
 
 	// execvp() returns -1 if command does not exist
 	if (status == -1) {

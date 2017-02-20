@@ -187,10 +187,7 @@ int main() {
 			if (!cmdIsBgProcess(cmd)) {
 				wait(&status);
 			}
-			// Check if child exited properly
-			if (status == 0) {
-				history.push_back(cmd);
-			}
+			history.push_back(cmd);
 		}
 	}
 	return 0;

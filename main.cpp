@@ -9,6 +9,9 @@
 
 using namespace std;
 
+// The maximum number of commands to store in the history
+static const int HISTORY_MAX_CMD_COUNT = 10;
+
 // Check if the command should spawn a background process (via a trailing &)
 bool cmdIsBgProcess(string cmd) {
 	return (cmd[cmd.length() - 1] == '&');
@@ -78,17 +81,17 @@ string getEnteredCmd() {
 	}
 }
 
-// Display a list of the last 10 commands in the history
+// Display a list of the most-recently used commands
 void displayHistory(deque<string> &history) {
 	if (!history.size() > 0) {
 		cout << "No commands in history" << endl;
 		return;
 	}
 
-	// Display no more than the 10 most-recent commands
-	for (int i = 0; i < 10; i++) {
-		// There may be fewer than 10 items in the history; do not display more
-		// than what the history contains
+	// Display no more than the maximum number of commands
+	for (int i = 0; i < HISTORY_MAX_CMD_COUNT; i++) {
+		// There may be fewer commands in the history; do not display more than
+		// what the history contains
 		if (i >= history.size()) {
 			break;
 		}

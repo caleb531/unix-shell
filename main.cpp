@@ -1,3 +1,19 @@
+/**
+ * CS 433 Programming Assignment 2: UNIX Shell
+ * Caleb Evans, Jonathan Tapia
+ * February 25, 2017
+ * DESCRIPTION
+ * This program includes the complete implementation for a simple Unix shell
+ * HOW TO RUN
+ * Run `make` to compile the program, then run `./unix-shell.out` to execute
+ * the compiled program
+ * KNOWN ASSUMPTIONS
+ * The shell is capable of executing standard POSIX commands (e.g. `ls -a`),
+ * executable files (e.g. `./unix-shell.out`), and any other command on the
+ * user's PATH (e.g. `mysql`). The shell is also capable of accessing the last
+ * 10 executed commands via `history`, `!!`, and `!N` (where N is the numeric ID
+ * of the command to run)
+ */
 #include <iostream>
 #include <cstring>
 #include <vector>
